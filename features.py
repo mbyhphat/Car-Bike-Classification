@@ -22,16 +22,21 @@ def get_hog_features(img, orient=9, pix_per_cell=8, cell_per_block=2,
                        visualize=vis, feature_vector=feature_vec)
         return features
     
-category_map = {'Bike': 0, 'Car': 1}
-root_dir = 'data/Car-Bike-Dataset'
-hog_features = []
+def get_features(root_dir):    
+    category_map = {'Bike': 0, 'Car': 1}
+    root_dir = 'data/Car-Bike-Dataset'
+    hog_features = []
+    labels = []
 
-for category, label in category_map.items():
-    category_path = os.path.join(root_dir,category)
-    for img_name in os.listdir(category_path):
-        img_path = os.path.join(category_path,img_name)
-        img = cv2.imread(img_path)
-        img = cv2.resize(img, (224,224))
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        hog_feature = get_hog_features(img)
+    for category, label in category_map.items():
+        category_path = os.path.join(root_dir,category)
+        for img_name in tqdm(os.listdir(category_path)):
+            img_path = os.path.join(category_path,img_name)
+            img = cv2.imread(img_path)
+            img = cv2.resize(img, (224,224))
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            hog_feature = get_hog_features(img)
+            hog_features.append(hog_feature)
+            labels.append(label)
+    return np.array(hog_features), np.array(labels)
         
