@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dashboard</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                display: flex;
+                min-height: 100vh;
+                flex-flow: wrap row;
+                justify-content: center;
+                align-items: center;
+                align-content: space-evenly;
+                font-size: 20px;
+                background-image: url("https://imgs.search.brave.com/EuLmGTE4sf-tyIvh-aPiQg6JtsP3VF_Zi5006O2Hk1o/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9ibGF6ZS1nbG9y/eS1ob3Qtd2VhdGhl/ci10cml1bXBoXzk2/MDM5Ni0xOTkxODEu/anBnP3NlbXQ9YWlz/X2h5YnJpZA");
+                background-size: 50% 100%;
+                background-position: top left; /* Đặt hình nền đầu tiên ở phần trên */
+                background-repeat: no-repeat;
+                z-index: -1; /* Đặt hình nền dưới các phần tử khác */
+            }
+            body :after {
+                content: "";
+                position: absolute;
+                top: 0; /* Bắt đầu từ giữa */
+                left: 50%;
+                width: 50%; /* Chiếm nửa chiều rộng còn lại */
+                height: 100%; 
+                background-image: url("https://imgs.search.brave.com/pGBFJ35NqbxZnTewemHTVRPpGhlR6ebLOnrJJZA1Uhc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzA2LzAyLzA5LzIy/LzM2MF9GXzYwMjA5/MjI0OV9aZFZWVUlu/dXFMVjJLUk4wUWEw/V0s5c09Bd3BORXo2/ZC5qcGc");
+                background-size: 100% 100%;
+                background-position: bottom left;
+                background-repeat: no-repeat;
+                z-index: -1;
+            }
+            .list_image {
+                display: flex;
+                justify-content: space-between;
+                border: none;
+                min-width: 100%;
+                min-height: 45vh;
+                padding-left: 10px;
+                padding-right: 10px;
+             }
+            .container {
+                border: 1px solid aqua;
+                min-width: 60vw;
+                min-height: 60px;
+                background-color: aqua;
+                display: grid;
+                grid-template-columns: 2.5fr 1fr;
+                grid-template-rows: 1fr;
+                align-content: stretch;
+             }
+             .url_image {
+                grid-column: 1 / 2;
+                min-height: 100%;
+                min-width: 100%;
+                background-color: #3d3d3c;
+                color: white;
+                display: flex;
+                flex-flow: nowrap row;
+                align-items: center;
+             }
+             .url_image label {
+                margin-right: 5px;
+                white-space: nowrap; /* Ngăn nhãn bị xuống dòng */
+             }
+             .url_image input {
+                flex: 1; /* Input chiếm toàn bộ không gian còn lại */
+                min-height: 2.5em;
+                max-width: 100%; /* Ngăn input tràn ra ngoài */
+                margin-right: 2px;
+             }
+             .button {
+                grid-column: 2 / -1;
+                min-height: 100%;
+                min-width: 100%;
+                display: flex;
+                justify-content: center;
+                background-color: red;
+             }
+             .button button {
+                border: None;
+                background-color: red;
+                min-width: 100%;
+                color: white;
+                font-size: 20px;
+                cursor: pointer;
+             }
+             .button :hover {
+                min-width: 100%;
+                background-color: rgb(26, 236, 236);
+             }
+        </style>
+    </head>
+    <body>
+        <div class="list_image" id="list_image">
+            <!-- Hình ảnh sẽ được thêm vào đây -->
+        </div>
+        <div class="container">
+            <div class="url_image">
+                <label for="image">URL image: </label>
+                <input type="text" name="image" id="image" class="image" required="">
+            </div>
+            <div class="button">
+                <button>Predict</button>
+            </div>
+        </div>
+    </body>
+    <script>
+        let queue = [];
+        let index = 0;
+
+        const textInput = document.getElementById("image");
+        const li_image = document.getElementById("list_image")
+        const sendButton = document.querySelector("button")
+
+        function displayQueue() {
+            // Xóa nội dung cũ của list_image trước khi hiển thị
+            li_image.innerHTML = "";
+
+            // Duyệt qua queue và tạo thẻ img
+            queue.forEach((item, i) => {
+                // Tạo container chính
+                const container = document.createElement("div");
+                container.style.display = "flex"; // Flexbox để các phần tử nằm ngang
+                container.style.alignItems = "center";
+                container.style.gap = "6px";
+                container.style.minWidth = "50%"
+                container.style.flexWrap = "wrap";
+
+                const img = document.createElement("img");
+                img.src = item.src;
+                img.alt = `Image ${i}`;
+                img.width = 250;
+                img.height = 250;
+                img.title = "Original Image";
+
+                // Thêm sự kiện xử lý khi ảnh bị lỗi
+                img.onerror = () => {
+                    alert(`Ảnh với URL "${src}" không hợp lệ và sẽ bị xóa khỏi danh sách.`);
+                    console.error(`Ảnh không tải được từ URL: ${src}`); // Log lỗi vào console
+                    
+                    // Xóa URL lỗi khỏi queue
+                    queue = queue.filter((item) => item !== src);
+
+                    // Hiển thị lại danh sách
+                    displayQueue();
+                };
+                
+                const arrow = document.createElement("p");
+                const label = document.createElement("p");
+                const imgHOG = document.createElement("img");
+                if (item.label) {
+                    // Mũi tên từ ảnh gốc đến ảnh HOG
+                    arrow.innerHTML = "→";
+                    arrow.style.color = "white";
+                    arrow.style.fontWeight = "900";
+                    arrow.style.fontSize = "50px";
+
+                    // Ảnh HOG feature
+                    imgHOG.src = `data:image/jpeg;base64,${item.hogImage}`;
+                    imgHOG.alt = `HOG Image ${i}`;
+                    imgHOG.width = 250;
+                    imgHOG.height = 250;
+                    imgHOG.title = "HOG feature image"
+
+                    // Nhãn dự đoán
+                    label.innerHTML = item.label || "Waiting for prediction...";
+                    label.style.color = "white";
+                    label.style.fontSize = "24px";
+                    
+                }
+                // Thêm các phần tử vào container
+                container.appendChild(img);
+                container.appendChild(arrow) // Thêm mũi tên giữa ảnh gốc và ảnh HOGs
+                container.appendChild(imgHOG);   // Thêm ảnh HOG vào container
+                const arrow2 = arrow.cloneNode(true)
+                container.appendChild(arrow2) // Thêm mũi tên giữa ảnh HOG và nhãn
+                container.appendChild(label);   // Thêm ảnh nhãn vào container
+                
+                // Thêm container vào list_image
+                li_image.appendChild(container);
+
+            });
+        }
+        textInput.addEventListener("keyup", (event) => {
+            if (event.key === "Enter" && textInput.value.trim() != "") {
+                if (queue.length >= 2) {
+                    alert("Danh sách ảnh đã đạt giới hạn 2 ảnh!"); // Hiển thị cảnh báo
+                } else {
+                    queue.push({ src: textInput.value.trim(), label: null }); // Thêm link vào queue
+                    displayQueue(); // Hiển thị lại danh sách ảnh
+                }
+                textInput.value = ""; // Xóa nội dung input
+            }
+        })
+        sendButton.addEventListener('click', async ()=> {
+            if (queue.length === 0) {
+                alert("Queue is empty!");
+                return;
+            }
+            try {
+                const response = await fetch("http://127.0.0.1:5000/predict", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',  // Đảm bảo Content-Type là application/json
+                    },
+                    body: JSON.stringify({ queue }),
+                });
+                if (response.ok) {
+                    console.log("Fetch Sucessfully");
+                    const data = await response.json();
+                    console.log(data)
+
+                    queue = queue.map((item) => {
+                        console.log(index)
+                        if (item.label === null) {
+                            const label = data.results['labels'][index] || "No prediction";
+                            const hogImage = data.results['hog_image'][index];
+                            index++;
+                            return { ...item, label, hogImage };
+                        }
+                        return item; // Giữ nguyên ảnh đã có nhãn
+                    });
+                    
+                    displayQueue();
+                } 
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Failed to send queue!");
+            }
+        })
+    </script>
+</html>
