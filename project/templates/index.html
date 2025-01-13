@@ -16,24 +16,7 @@
                 align-items: center;
                 align-content: space-evenly;
                 font-size: 20px;
-                /* background-image: url("https://imgs.search.brave.com/EuLmGTE4sf-tyIvh-aPiQg6JtsP3VF_Zi5006O2Hk1o/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9ibGF6ZS1nbG9y/eS1ob3Qtd2VhdGhl/ci10cml1bXBoXzk2/MDM5Ni0xOTkxODEu/anBnP3NlbXQ9YWlz/X2h5YnJpZA");
-                background-size: 50% 100%;
-                background-position: top left;
-                background-repeat: no-repeat;
-                z-index: -1;  */
             }
-            /* body :after {
-                content: "";
-                position: absolute;
-                top: 0; 
-                left: 50%;
-                width: 50%; 
-                background-image: url("https://imgs.search.brave.com/EuLmGTE4sf-tyIvh-aPiQg6JtsP3VF_Zi5006O2Hk1o/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9ibGF6ZS1nbG9y/eS1ob3Qtd2VhdGhl/ci10cml1bXBoXzk2/MDM5Ni0xOTkxODEu/anBnP3NlbXQ9YWlz/X2h5YnJpZA");
-                background-size: 50% 100%;
-                background-position: top left; 
-                background-repeat: no-repeat;
-                z-index: -1; 
-            } */
             .list_image {
                 display: flex;
                 justify-content: space-between;
@@ -94,7 +77,7 @@
                 background-color: rgb(26, 236, 236);
              }
              header {
-                color: white;
+                color: black;
                 font-size: 30px;
                 margin-top: 2px;
              }
@@ -121,7 +104,7 @@
 
         const textInput = document.getElementById("image");
         const li_image = document.getElementById("list_image")
-        const sendButton = document.querySelector("button")
+        const sendButton = document.querySelector("button");
 
         function displayQueue() {
             // Xóa nội dung cũ của list_image trước khi hiển thị
@@ -144,6 +127,14 @@
                 img.height = 250;
                 img.title = "Original Image";
 
+                const imgContainer = document.createElement("div"); // Thêm div bao bọc ảnh và văn bản
+                imgContainer.style.display = "block";
+
+                imageTitle = document.createElement("p");
+                imageTitle.textContent = "Image";
+                imageTitle.style.color = "black";
+                imageTitle.style.textAlign = "center";
+
                 // Thêm sự kiện xử lý khi ảnh bị lỗi
                 img.onerror = () => {
                     alert(`Ảnh với URL "${src}" không hợp lệ và sẽ bị xóa khỏi danh sách.`);
@@ -159,6 +150,9 @@
                 const arrow = document.createElement("p");
                 const label = document.createElement("p");
                 const imgHOG = document.createElement("img");
+
+                const hogContainer = document.createElement("div"); // Thêm div bao bọc ảnh và văn bản
+                hogContainer.style.display = "block"; 
                 if (item.label) {
                     // Mũi tên từ ảnh gốc đến ảnh HOG
                     arrow.innerHTML = "→";
@@ -177,12 +171,23 @@
                     label.innerHTML = item.label || "Waiting for prediction...";
                     label.style.color = "black";
                     label.style.fontSize = "24px";
+
+                    hogTitle = document.createElement('p');
+                    hogTitle.textContent = "Hog Feature";
+                    hogTitle.style.color = "black";
+                    hogTitle.style.textAlign = "center";
+                    hogContainer.appendChild(hogTitle);
+                    hogContainer.appendChild(imgHOG)
                     
                 }
+
                 // Thêm các phần tử vào container
-                container.appendChild(img);
-                container.appendChild(arrow) // Thêm mũi tên giữa ảnh gốc và ảnh HOGs
-                container.appendChild(imgHOG);   // Thêm ảnh HOG vào container
+                imgContainer.appendChild(imageTitle);
+                imgContainer.appendChild(img);
+                container.appendChild(imgContainer);
+                container.appendChild(arrow); // Thêm mũi tên giữa ảnh gốc và ảnh HOGs
+                
+                container.appendChild(hogContainer);   // Thêm ảnh HOG vào container
                 const arrow2 = arrow.cloneNode(true)
                 container.appendChild(arrow2) // Thêm mũi tên giữa ảnh HOG và nhãn
                 container.appendChild(label);   // Thêm ảnh nhãn vào container
@@ -209,7 +214,7 @@
                 return;
             }
             try {
-                const response = await fetch("http://127.0.0.1:5000/predict", {
+                const response = await fetch(`${window.location.origin}/predict`, {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json',  // Đảm bảo Content-Type là application/json
