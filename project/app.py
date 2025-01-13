@@ -8,6 +8,7 @@ import requests
 import numpy as np
 from PIL import Image
 import base64
+import gdown, os
 
 app = Flask(__name__)
 CORS(app)
@@ -49,7 +50,15 @@ def read_image(url_image):
     return gray_image
 
 class_name = {0: "Motorbike", 1: "Car"}
-model_svc = joblib.load("project/models/best_model.pkl")
+
+if not os.path.exists('models'):
+    os.makedirs('models')
+if not os.path.exists('models/best_model.pkl'):
+    file_id = '1akVWtGjy0-DRXQDRSPIykUtMwNDNKmwn'
+    url = f'https://drive.google.com/uc?id={file_id}'
+    gdown.download(url, 'models/best_model.pkl', quiet=True)
+
+model_svc = joblib.load("models/best_model.pkl")
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -77,4 +86,4 @@ def predict():
     return jsonify({"ok": True, "results": results})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
