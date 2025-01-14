@@ -20,7 +20,7 @@ phương tiện chính: xe máy và xe ô tô
 
 ### **2. Công nghệ sử dụng**
 - **Ngôn ngữ lập trình**: Python
-- **Framework**: Flask
+- **Framework Backend**: Flask
 - **Frontend**: HTML, CSS, JavaScript
 - **Container hóa**: Docker
 
