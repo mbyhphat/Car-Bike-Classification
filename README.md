@@ -40,7 +40,7 @@ phương tiện chính: xe máy và xe ô tô
 ### **4. Mô tả dữ liệu**
 #### **4.1 Thu thập dữ liệu**
 Nhóm sử dụng bộ dữ liệu “Car vs Bike Classification Dataset" thu thập từ kaggle. Bộ dữ liệu gồm 2000 ảnh xe máy và 2000 ảnh ô tô đã được chia thành 2 folder riêng biệt. <br>
-Link dataset: <a href="https://www.kaggle.com/datasets/utkarshsaxenadn/car-vs-bike-classification-dataset">
+Link dataset: [Car vs Bike Classification Dataset](https://www.kaggle.com/datasets/utkarshsaxenadn/car-vs-bike-classification-dataset)
 #### **4.2 Xử lý dữ liệu**
 Ảnh được xử lý với một số bước sau: <br>
 * Resize ảnh về kích thước (224, 224).
@@ -48,16 +48,25 @@ Link dataset: <a href="https://www.kaggle.com/datasets/utkarshsaxenadn/car-vs-bi
 
 Sau khi xử lý, hình ảnh sẽ được rút trích đặc trưng bằng HOG.
 ### **5. Cài đặt và chạy ứng dụng**
-* **Clone repository**: `git clone https://github.com/mbyhphat/Car-Bike-Classification.git`
-* **Pull Docker image từ Docker Hub**: `docker pull hightfight/initial_cv:latest`
-* **Chạy Docker container**: `docker run -p 8000:5000 hightfight/initial_cv:latest` (có thể sử dụng port tùy ý ngoài port 8000)
+* **Clone repository**: ```git clone https://github.com/mbyhphat/Car-Bike-Classification.git```
+* **Pull Docker image từ Docker Hub**: ```docker pull hightfight/initial_cv:latest```
+* **Chạy Docker container**: ```docker run -p 8000:5000 hightfight/initial_cv:latest``` (có thể sử dụng port tùy ý ngoài port 8000)
+* **Cấu trúc trang web**: 
+```
+    project/
+        ├── app.py
+        ├── requirements.txt
+        ├── Dockerfile
+        └── templates/
+            └── index.html/
+```
 ### **6. Kết quả**
 |     Model    | Accuracy | Precision | Recall | F1_Score |   
 |:------------:|:--------:| ---------:|-------:|----------:
 |     SVM      |   0.95   |    0.95   |  0.95  |   0.95   |       
 |Random Forest |   0.89   |    0.89   |  0.89  |   0.89   |
 
-Link model: <a href="https://drive.google.com/drive/folders/166mzq2h52yOkUAnACmglwUUp93DtsjY6?dmr=1&ec=wgc-drive-globalnav-goto"><br>
+Link model: [SVM và Random Forest](https://drive.google.com/drive/folders/166mzq2h52yOkUAnACmglwUUp93DtsjY6?dmr=1&ec=wgc-drive-globalnav-goto)<br>
 Demo: 
 <img src="images/Web_Interface.png" align="center">
 
